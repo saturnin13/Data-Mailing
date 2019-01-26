@@ -19,5 +19,3 @@ class MockMails:
                                [self.PATH_MOCK_DATA + "plane_ticket.jpg", self.PATH_MOCK_DATA + "peach.png"], "1548515339"))
         self.mails.append(Mail("test3@test.com", "user3@gmail.com", "Test subject 3", self.BODY_1,
                                [], "1548515339"))
-
-
