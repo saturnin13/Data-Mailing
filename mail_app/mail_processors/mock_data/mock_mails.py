@@ -49,11 +49,11 @@ class MockMails:
     def __init__(self):
         self.mails =[]
         self.mails.append(Mail("orders@eventbrite.com", "user1@gmail.com", "Your Tickets for Buttoned Down Disco",
-                               self.SCRIPT, [self.PATH_MOCK_DATA + "tomato.jpeg"], "1548515339"))
+                               self.SCRIPT, [{"name": "tomato", "url": self.PATH_MOCK_DATA + "tomato.jpeg"}], "1548515339"))
         self.mails.append(Mail("test1@test.com", "user1@gmail.com", "Test subject 1", self.BODY_1,
-                               [self.PATH_MOCK_DATA + "tomato.jpeg"], "1548515339"))
+                               [{"name": "tomato", "url": self.PATH_MOCK_DATA + "tomato.jpeg"}], "1548515339"))
         self.mails.append(Mail("test2@test.com", "user2@gmail.com", "Test subject 2", self.BODY_1,
-                               [self.PATH_MOCK_DATA + "plane_ticket.jpg", self.PATH_MOCK_DATA + "peach.png"], "1548515339"))
+                               [{"name": "tomato", "url": self.PATH_MOCK_DATA + "plane_ticket.jpg"}, {"name": "tomato", "url": self.PATH_MOCK_DATA + "peach.png"}], "1548515339"))
         self.mails.append(Mail("test3@test.com", "user3@gmail.com", "Test subject 3", self.BODY_1,
                                [], "1548515339"))
 mockmails = MockMails()

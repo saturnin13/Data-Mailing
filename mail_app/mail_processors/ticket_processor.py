@@ -1,3 +1,4 @@
+import json
 from bs4 import BeautifulSoup
 
 from mail_app.mail import Mail
@@ -15,15 +16,20 @@ class TicketProcessor(AbstractProcessor):
 
     def process(self, mail: Mail) -> ProcessedMail:
         if "Your Tickets for" in mail.subject:
-            self.process_eventbrite(mail)
-        elif self.__general_conditions(self):
+            self.__process_eventbrite(mail)
+        elif self.__general_conditions(mail):
             return ProcessedMail(self.category, mail.body, mail.time, mail.attachments)
         pass
 
     def __process_eventbrite(self, mail: Mail) -> ProcessedMail:
         soup = BeautifulSoup(mail.body, 'html.parser')
-        schema_script = soup.find(type="application/ld+json")
-        print(schema_script)
+        schema_script = soup.find('script', type="application/ld+json")
+        schema_json = json.loads(schema_script.text)
+        processed_mail = ProcessedMail(category="event", description=schema_json['reservationFor']['name'], date=mail.time,
+                     attachments=mail.attachments, specifics=schema_json)
+        attrs = vars(processed_mail)
+        print(', '.join("%s: %s" % item for item in attrs.items()))
+        return processed_mail
 
     ############################################ Conditions ############################################
 
@@ -31,4 +37,5 @@ class TicketProcessor(AbstractProcessor):
         return mail.attachments and \
                (any(keyword in mail.subject.lower() for keyword in self.general_keywords) or
                 any(keyword in mail.body.lower() for keyword in self.general_keywords) or
-                any(keyword in attachment.name.lower() for attachment in mail.attachments for keyword in self.general_keywords))
+                any(keyword in attachment['name'].lower() for attachment in mail.attachments for keyword in self.general_keywords))
+
