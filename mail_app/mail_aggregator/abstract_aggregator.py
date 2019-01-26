@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
 
 from mail_app.mail import Mail
-from mail_app.postprocessed_mails import PostprocessedMails
+from mail_app.aggregated_mails import AggregatedMails
 
 
-class AbstractPostprocessor(ABC):
+class AbstractAggregator(ABC):
 
     category = ""
 
@@ -12,5 +12,5 @@ class AbstractPostprocessor(ABC):
         super().__init__()
 
     @abstractmethod
-    def postprocess_all_mails(self, mails: [Mail]) -> PostprocessedMails:
+    def aggregate_all_mails(self, mails: [Mail]) -> AggregatedMails:
         pass

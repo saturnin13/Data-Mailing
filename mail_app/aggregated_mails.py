@@ -1,7 +1,7 @@
 import string
 
 
-class PostprocessedMails:
+class AggregatedMails:
 
     def __init__(self, category: string, specifics: object = None):
         self.category = category
