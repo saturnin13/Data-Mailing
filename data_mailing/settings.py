@@ -36,6 +36,8 @@ SECRET_KEY = get_env_var('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = "TRUE" == get_env_var('DEBUG_ENABLE')
 
+GOOGLE_OAUTH2_CLIENT_SECRETS_JSON = 'client_secrets.json'
+
 ALLOWED_HOSTS = []
 
 
@@ -65,7 +67,9 @@ ROOT_URLCONF = 'data_mailing.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            'templates'
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -129,3 +133,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
