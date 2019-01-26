@@ -1,0 +1,204 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Data Mailing</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+  <style>
+    .accordion .card .card-header {
+      margin-bottom: 0px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="container">
+      <div class="row mt-2">
+        <h1>Data Mailing</h1>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row card mt-3">
+        <div class="card-header">
+          <h2 class="mb-0">
+            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="true" aria-controls="collapseOne">
+              Airplane tickets
+            </button>
+            <span class="badge badge-success float-right">2</span>
+          </h2>
+        </div>
+
+        <div id="collapseExample" class="collapse show" aria-labelledby="headingOne">
+          <div class="card-body">
+            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid.
+            <hr/>
+            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid.
+          </div>
+        </div>
+      </div>
+
+      <div class="row card mt-3">
+        <div class="card-header">
+          <h2 class="mb-0">
+            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseExample2" aria-expanded="true" aria-controls="collapseOne">
+              Eventbrite tickets
+            </button>
+            <span class="badge badge-success float-right">7</span>
+          </h2>
+        </div>
+
+        <div id="collapseExample2" class="collapse" aria-labelledby="headingOne">
+          <div class="card-body">
+            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+          </div>
+        </div>
+      </div>
+
+      <div class="row card mt-3">
+        <div class="card-header">
+          <h2 class="mb-0">
+            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseExample3" aria-expanded="true" aria-controls="collapseOne">
+              Eventbrite tickets
+            </button>
+            <span class="badge badge-success float-right">9</span>
+          </h2>
+        </div>
+
+        <div id="collapseExample3" class="collapse" aria-labelledby="headingOne">
+          <div class="card-body">
+            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Boostrap JS and Jquery -->
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+  <!-- Auth0 -->
+  <script src="https://cdn.auth0.com/js/auth0/9.5.1/auth0.min.js"></script>
+  <script type="text/javascript">
+    var webAuth = new auth0.WebAuth({
+      domain: 'data-mailing.eu.auth0.com',
+      clientID: 'Y7nGdEW-8tLQ0hkp8yOtd3SMYyA9m-5g',
+      responseType: 'token id_token',
+      scope: 'openid',
+      redirectUri: window.location.href
+    });
+
+    function localLogin(authResult) {
+      // Set isLoggedIn flag in localStorage
+      localStorage.setItem('isLoggedIn', 'true');
+      // Set the time that the access token will expire at
+      expiresAt = JSON.stringify(
+        authResult.expiresIn * 1000 + new Date().getTime()
+      );
+      accessToken = authResult.accessToken;
+      idToken = authResult.idToken;
+
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('idToken', idToken);
+    }
+
+    function handleAuthentication() {
+      webAuth.parseHash(function(err, authResult) {
+
+        if (authResult && authResult.accessToken && authResult.idToken) {
+          window.location.hash = '';
+          localLogin(authResult);
+
+        } else if (err) {
+          console.log(err);
+          alert('Error: ' + err.error + '. Check the console for further details.');
+        }
+      });
+    }
+
+    function renewTokens() {
+      webAuth.checkSession({}, (err, authResult) => {
+
+        if (authResult && authResult.accessToken && authResult.idToken) {
+          console.log('Getting new token');
+          localLogin(authResult);
+
+        } else if (err) {
+          alert('Could not get a new token '  + err.error + ':' + err.error_description + '.');
+        }
+      });
+    }
+
+    function sendTokenToApi(auth_token) {
+      $.ajax({
+        url: 'http://localhost:8000/user/',
+        type: 'POST',
+        dataType: 'json',
+        data: {
+          'token': auth_token
+        },
+        success: function (result) {
+          console.log('Token sent');
+          console.log(result);
+        },
+        error: function (error) {
+          console.log('Token failed to send');
+          console.log(error);
+        }
+      });
+    }
+
+    window.addEventListener('load', function() {
+      if (localStorage.getItem('isLoggedIn') === 'true') {
+        renewTokens();
+      } else {
+        webAuth.authorize();
+        handleAuthentication();
+      }
+
+      $.ajax({
+            url: 'https://data-mailing.eu.auth0.com/userinfo',
+            type: 'GET',
+            dataType: 'json',
+            headers: {
+                'authorization': 'Bearer ' + localStorage.getItem('accessToken')
+            },
+            success: function (result) {
+               $.ajax({
+                 url: 'https://data-mailing.eu.auth0.com/api/v2/users/' + result.sub,
+                 type: 'GET',
+                 dataType: 'json',
+                 headers: {
+                  'authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik1USkdSVFJGUVRkQ05VUkNSRU15UmtVME1FVXdPRGRHT0RSRE5ESXpNakpCTXpGRU1FWkRNUSJ9.eyJpc3MiOiJodHRwczovL2RhdGEtbWFpbGluZy5ldS5hdXRoMC5jb20vIiwic3ViIjoiTlZ5TXhqMlF3c1pkWTdYeWRIMk5xeEhZVHZiQWdpcWhAY2xpZW50cyIsImF1ZCI6Imh0dHBzOi8vZGF0YS1tYWlsaW5nLmV1LmF1dGgwLmNvbS9hcGkvdjIvIiwiaWF0IjoxNTQ4NTM5NTE5LCJleHAiOjE1NDg2MjU5MTksImF6cCI6Ik5WeU14ajJRd3NaZFk3WHlkSDJOcXhIWVR2YkFnaXFoIiwic2NvcGUiOiJyZWFkOmNsaWVudF9ncmFudHMgY3JlYXRlOmNsaWVudF9ncmFudHMgZGVsZXRlOmNsaWVudF9ncmFudHMgdXBkYXRlOmNsaWVudF9ncmFudHMgcmVhZDp1c2VycyB1cGRhdGU6dXNlcnMgZGVsZXRlOnVzZXJzIGNyZWF0ZTp1c2VycyByZWFkOnVzZXJzX2FwcF9tZXRhZGF0YSB1cGRhdGU6dXNlcnNfYXBwX21ldGFkYXRhIGRlbGV0ZTp1c2Vyc19hcHBfbWV0YWRhdGEgY3JlYXRlOnVzZXJzX2FwcF9tZXRhZGF0YSBjcmVhdGU6dXNlcl90aWNrZXRzIHJlYWQ6Y2xpZW50cyB1cGRhdGU6Y2xpZW50cyBkZWxldGU6Y2xpZW50cyBjcmVhdGU6Y2xpZW50cyByZWFkOmNsaWVudF9rZXlzIHVwZGF0ZTpjbGllbnRfa2V5cyBkZWxldGU6Y2xpZW50X2tleXMgY3JlYXRlOmNsaWVudF9rZXlzIHJlYWQ6Y29ubmVjdGlvbnMgdXBkYXRlOmNvbm5lY3Rpb25zIGRlbGV0ZTpjb25uZWN0aW9ucyBjcmVhdGU6Y29ubmVjdGlvbnMgcmVhZDpyZXNvdXJjZV9zZXJ2ZXJzIHVwZGF0ZTpyZXNvdXJjZV9zZXJ2ZXJzIGRlbGV0ZTpyZXNvdXJjZV9zZXJ2ZXJzIGNyZWF0ZTpyZXNvdXJjZV9zZXJ2ZXJzIHJlYWQ6ZGV2aWNlX2NyZWRlbnRpYWxzIHVwZGF0ZTpkZXZpY2VfY3JlZGVudGlhbHMgZGVsZXRlOmRldmljZV9jcmVkZW50aWFscyBjcmVhdGU6ZGV2aWNlX2NyZWRlbnRpYWxzIHJlYWQ6cnVsZXMgdXBkYXRlOnJ1bGVzIGRlbGV0ZTpydWxlcyBjcmVhdGU6cnVsZXMgcmVhZDpydWxlc19jb25maWdzIHVwZGF0ZTpydWxlc19jb25maWdzIGRlbGV0ZTpydWxlc19jb25maWdzIHJlYWQ6ZW1haWxfcHJvdmlkZXIgdXBkYXRlOmVtYWlsX3Byb3ZpZGVyIGRlbGV0ZTplbWFpbF9wcm92aWRlciBjcmVhdGU6ZW1haWxfcHJvdmlkZXIgYmxhY2tsaXN0OnRva2VucyByZWFkOnN0YXRzIHJlYWQ6dGVuYW50X3NldHRpbmdzIHVwZGF0ZTp0ZW5hbnRfc2V0dGluZ3MgcmVhZDpsb2dzIHJlYWQ6c2hpZWxkcyBjcmVhdGU6c2hpZWxkcyBkZWxldGU6c2hpZWxkcyB1cGRhdGU6dHJpZ2dlcnMgcmVhZDp0cmlnZ2VycyByZWFkOmdyYW50cyBkZWxldGU6Z3JhbnRzIHJlYWQ6Z3VhcmRpYW5fZmFjdG9ycyB1cGRhdGU6Z3VhcmRpYW5fZmFjdG9ycyByZWFkOmd1YXJkaWFuX2Vucm9sbG1lbnRzIGRlbGV0ZTpndWFyZGlhbl9lbnJvbGxtZW50cyBjcmVhdGU6Z3VhcmRpYW5fZW5yb2xsbWVudF90aWNrZXRzIHJlYWQ6dXNlcl9pZHBfdG9rZW5zIGNyZWF0ZTpwYXNzd29yZHNfY2hlY2tpbmdfam9iIGRlbGV0ZTpwYXNzd29yZHNfY2hlY2tpbmdfam9iIHJlYWQ6Y3VzdG9tX2RvbWFpbnMgZGVsZXRlOmN1c3RvbV9kb21haW5zIGNyZWF0ZTpjdXN0b21fZG9tYWlucyByZWFkOmVtYWlsX3RlbXBsYXRlcyBjcmVhdGU6ZW1haWxfdGVtcGxhdGVzIHVwZGF0ZTplbWFpbF90ZW1wbGF0ZXMgcmVhZDptZmFfcG9saWNpZXMgdXBkYXRlOm1mYV9wb2xpY2llcyByZWFkOnJvbGVzIGNyZWF0ZTpyb2xlcyBkZWxldGU6cm9sZXMgdXBkYXRlOnJvbGVzIiwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIn0.bXnCcWtvpLwLy_g_rCqCHDl6kyMAwKjlfkptu69rkori4-uGmwt6YbTjHMURiOiHFwnduUh-T1tCjJH7PgOUPxRzN7yrJOp6M1_d0i3U5gtzP8v1I2CfTSJ2iFDWbqnWIoTg6SNK3cnDkVYnbmhwufezNY7FtfB0lzx8W1LcxOIMbS9CXuUSHaO797rqATn9vnbt0Q7_90iBmY7jVRYOxXTzLj7SjUP5iGHzbCOJJ9F-6dBFRJANAjvYyZ1_GJqzr_5iRItvOiE9ziGQeKDOEV_j0AkNPa99xMiqfIiopwP83A6LGthNm8PnQp7YCHHDCOmydTX3RaXblhyIQSB3pg'
+                 },
+                 success: function (result) {
+                   console.log('Information retrieved');
+                   sendTokenToApi(result.identities[0].access_token)
+                 },
+                 error: function (error) {
+                   console.log('Information failed to retrieve');
+                   console.log(error)
+                 }
+               });
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+
+    });
+
+  </script>
+
+</body>
+
+</html>
