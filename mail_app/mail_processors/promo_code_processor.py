@@ -6,8 +6,7 @@ from mail_app.processed_mail import ProcessedMail
 
 class ApplicationProcessor(AbstractProcessor):
 
-    general_keywords = ["interview", "application status", "follow up", "take home test", "next stage",
-                        "your application", "thank you for applying"]
+    general_keywords = ["voucher", "promo code", "promocode", "offer", "code", "\d\d?% off", "reduction", "£\d\d?\d? off"]
 
     def __init__(self):
         super().__init__()
