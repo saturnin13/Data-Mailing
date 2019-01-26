@@ -1,6 +1,10 @@
+import datetime
+import string
+
+
 class Mail:
 
-    def __init__(self, from_: object, to_: object, subject: object, body: object, attachments: object, time: object) -> object:
+    def __init__(self, from_: string, to_: string, subject: string, body: string, attachments: [string], time: datetime) -> object:
         self.from_ = from_
         self.to_ = to_
         self.subject = subject
