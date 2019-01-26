@@ -5,4 +5,3 @@ class PromoCode(AbstractProcessor):
 
     def process(self, mail):
         pass
-        

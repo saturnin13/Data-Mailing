@@ -6,6 +6,8 @@ from mail_app.processed_mail import ProcessedMail
 
 class AbstractProcessor(ABC):
 
+    category = ""
+
     def __init__(self):
         super().__init__()
 
