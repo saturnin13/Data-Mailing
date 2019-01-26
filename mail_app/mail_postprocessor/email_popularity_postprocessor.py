@@ -1,11 +1,8 @@
-import re
 from collections import Counter, OrderedDict
 
-from mail_app.mail import Mail
 from mail_app.mail_postprocessor.abstract_postprocessor import AbstractPostprocessor
-from mail_app.mail_processors.abstract_processor import AbstractProcessor
 from mail_app.postprocessed_mails import PostprocessedMails
-from mail_app.processed_mail import ProcessedMail
+
 
 class EmailPopularityPostprocessor(AbstractPostprocessor):
 

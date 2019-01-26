@@ -20,8 +20,7 @@ class PasswordProcessor(AbstractProcessor):
     ############################################ Conditions ############################################
 
     def __general_conditions(self, mail: Mail):
-        return (mail.attachments or
-            any(re.search(keyword, mail.body.lower()) for keyword in self.ticket_keyword)) and \
+        return mail.attachments and \
            (any(re.search(keyword, mail.subject.lower()) for keyword in self.general_keywords) or
             any(re.search(keyword, mail.body.lower()) for keyword in self.general_keywords) or
             any(re.search(keyword, attachment["name"].lower()) for attachment in mail.attachments for keyword in
