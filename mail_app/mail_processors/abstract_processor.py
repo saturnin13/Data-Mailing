@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 from mail_app.mail import Mail
-from mail_app.mail_processors.processed_mail import ProcessedMail
+from mail_app.processed_mail import ProcessedMail
 
 
 class AbstractProcessor(ABC):
