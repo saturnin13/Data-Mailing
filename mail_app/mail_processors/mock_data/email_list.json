@@ -1,0 +1,41 @@
+[
+  {
+    "emails": {
+      "date": "1548515339",
+      "subject": "Test subject",
+      "from": "test@test.com",
+      "attachments": [
+        "mock_data/attachment/tomato.jpeg"
+      ],
+      "body": {
+        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+      }
+    }
+  },
+  {
+    "emails": {
+      "date": "1548516339",
+      "subject": "Test subject 2",
+      "from": "test@hotmail.fr",
+      "attachments": [
+        "mock_data/attachment/peach.png"
+      ],
+      "body": {
+        "The fleshy, pinkish-orange fruit of the fuzzy peach, shown with green leaves and sometimes a stem.\n\nThanks to its distinctive cleft, the emoji is commonly used for “buttocks.”\n\nPeach was approved as part of Unicode 6.0 in 2010 and added to Emoji 1.0 in 2015."
+      }
+    }
+  },
+  {
+    "emails": {
+      "date": "1548516378",
+      "subject": "Test subject 3",
+      "from": "test@gmail.fr",
+      "attachments": [
+        "mock_data/attachment/tomato.jpeg"
+      ],
+      "body": {
+        "An airline ticket is a document or electronic record, issued by an airline or a travel agency, that confirms that an individual is entitled to a seat on a flight on an aircraft. The airline ticket may be one of two types: a paper ticket, which comprises coupons or vouchers; and an electronic ticket (commonly referred to as an e-ticket)."
+      }
+    }
+  }
+]
