@@ -12,5 +12,5 @@ class AbstractPostprocessor(ABC):
         super().__init__()
 
     @abstractmethod
-    def process(self, mails: [Mail]) -> PostprocessedMails:
+    def postprocess_all_mails(self, mails: [Mail]) -> PostprocessedMails:
         pass

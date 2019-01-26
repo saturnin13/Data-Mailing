@@ -11,7 +11,7 @@ class ApplicationProcessor(AbstractProcessor):
 
     def __init__(self):
         super().__init__()
-        self.category = "Promo code"
+        self.category = "Application"
 
     def process(self, mail):
         if self.__general_conditions(mail):

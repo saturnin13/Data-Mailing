@@ -11,7 +11,7 @@ class PasswordProcessor(AbstractProcessor):
 
     def __init__(self):
         super().__init__()
-        self.category = "Promo code"
+        self.category = "Password"
 
     def process(self, mail):
         if self.__general_conditions(mail):
