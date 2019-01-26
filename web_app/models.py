@@ -1,3 +1,11 @@
 from django.db import models
 
-# Create your models here.
+
+class ProcessedEmail(models.Model):
+    user_id = models.CharField()
+    date = models.TimeField()
+    from_ = models.CharField()
+    description = models.CharField()
+    attachment_location = models.CharField()
+    category = models.CharField()
+
