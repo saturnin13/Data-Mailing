@@ -9,6 +9,7 @@ from mail_app.processed_mail import ProcessedMail
 
 
 class TicketProcessor(AbstractProcessor):
+
     general_keywords = ["ticket", "boarding pass", "boardingpass", "booking reference"]
     ticket_keyword = ["qrcode"]
 
@@ -26,15 +27,15 @@ class TicketProcessor(AbstractProcessor):
             attrs = vars(processed_mail)
             print(', '.join("%s: %s" % item for item in attrs.items()))
             return processed_mail
-        if self.__general_conditions(mail):
+        elif self.__general_conditions(mail):
             return ProcessedMail(self.category, mail.body, mail.time, mail.attachments)
 
     ############################################ Conditions ############################################
 
     def __general_conditions(self, mail: Mail):
         return (mail.attachments or
-                any(re.search(mail.body.lower(), keyword) for keyword in self.ticket_keyword)) and \
-               (any(re.search(mail.subject.lower(), keyword) for keyword in self.general_keywords) or
-                any(re.search(mail.body.lower(), keyword) for keyword in self.general_keywords) or
-                any(re.search(attachment["name"].lower(), keyword) for attachment in mail.attachments for keyword in
+                any(re.search(keyword, mail.body.lower()) for keyword in self.ticket_keyword)) and \
+               (any(re.search(keyword, mail.subject.lower()) for keyword in self.general_keywords) or
+                any(re.search(keyword, mail.body.lower()) for keyword in self.general_keywords) or
+                any(re.search(keyword, attachment["name"].lower()) for attachment in mail.attachments for keyword in
                     self.general_keywords))

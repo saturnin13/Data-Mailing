@@ -4,10 +4,10 @@ from mail_app.mail import Mail
 from mail_app.mail_processors.abstract_processor import AbstractProcessor
 from mail_app.processed_mail import ProcessedMail
 
-class PasswordProcessor(AbstractProcessor):
 
-    general_keywords = ["password (reset|request|update|updated)", "(new|reset|change|updated|changed your) password",
-                        "address verification", "(confirm|confirm your|activate your) (registration|account)"]
+class PromoCode(AbstractProcessor):
+
+    general_keywords = ["voucher", "promo code", "promocode", "offer", "code"]
 
     def __init__(self):
         super().__init__()
