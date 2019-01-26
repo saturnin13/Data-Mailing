@@ -4,7 +4,7 @@ from mail_app.mail import Mail
 from mail_app.mail_processors.abstract_processor import AbstractProcessor
 from mail_app.processed_mail import ProcessedMail
 
-class PromoCodeProcessor(AbstractProcessor):
+class ApplicationProcessor(AbstractProcessor):
 
     general_keywords = ["interview", "application status", "follow up", "take home test", "next stage",
                         "your application", "thank you for applying"]
