@@ -204,33 +204,7 @@
         }
     });
 
-    mailing_data.categories = [
-        {
-            name: "Tickets",
-            mails:[
-                {
-                    message_id: "1",
-                    from: "tickets from",
-                    description: "tetstdftuscyuscouyvcsoauyfvwoyu"
-                }
-            ]
-        },
-        {
-            name: "Applications",
-            mails:[
-                {
-                    message_id: "2",
-                    from: "from Applications",
-                    description: "hdavdayvidavdai"
-                }
-            ]
-        }
-    ];
-</script>
 
-
-
-<script type="text/javascript">
     var webAuth = new auth0.WebAuth({
       domain: 'data-mailing.eu.auth0.com',
       clientID: 'Y7nGdEW-8tLQ0hkp8yOtd3SMYyA9m-5g',
@@ -239,8 +213,6 @@
       redirectUri: window.location.href,
       access_type: 'offline'
     });
-
-    var data = [];
 
     function localLogin(authResult) {
       // Set isLoggedIn flag in sessionStorage
@@ -309,8 +281,8 @@
                 'access_token': access_token
             },
             success: function (result) {
-                data = result;
-                console.log(JSON.parse(result));
+                mailing_data.categories = JSON.parse(result).data;
+                console.log(JSON.parse(result).data);
             },
             error: function (error) {
                 console.log('Failed to fetch data');

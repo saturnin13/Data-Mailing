@@ -37,6 +37,4 @@ class TicketProcessor(AbstractProcessor):
         return (mail.attachments or
                 any(re.search(mail.body.lower(), keyword) for keyword in self.ticket_keyword)) and \
                (any(re.search(mail.subject.lower(), keyword) for keyword in self.general_keywords) or
-                any(re.search(mail.body.lower(), keyword) for keyword in self.general_keywords) or
-                any(re.search(attachment["name"].lower(), keyword) for attachment in mail.attachments for keyword in
-                    self.general_keywords))
+                any(re.search(mail.body.lower(), keyword) for keyword in self.general_keywords))
