@@ -34,8 +34,8 @@
 
 <body>
 
-<div class="h-100 w-100 pt-2" style="overflow:auto;">
-  <div class="container rounded" style="overflow:auto; background-color: rgb(240, 241, 242);">
+<div class="h-100 w-100 pt-2 mt-3" style="overflow:auto;">
+  <div class="container rounded" style="overflow:auto;">
     <div class="container">
       <div class="row mt-2">
         <h1>Data Mailing</h1>
@@ -43,7 +43,7 @@
     </div>
 
     <!-- Nav tabs -->
-    <ul class="nav nav-tabs mt-1">
+    <ul class="nav nav-tabs mt-4">
       <li class="nav-item">
         <a class="nav-link" data-toggle="tab" href="#general">General&nbsp;<span class="badge badge-success float-right">2</span></a>
       </li>
@@ -257,11 +257,9 @@
             },
             success: function (result) {
                 console.log('Token sent');
-                console.log(result);
             },
             error: function (error) {
                 console.log('Token failed to send');
-                console.log(error);
             }
         });
     }
@@ -275,7 +273,8 @@
                 'access_token': access_token
             },
             success: function (result) {
-                data = result.data;
+                data = result;
+                console.log(JSON.parse(result));
             },
             error: function (error) {
                 console.log('Failed to fetch data');
@@ -311,8 +310,8 @@
                     },
                     success: function (result) {
                         console.log('Information retrieved');
-                        sendTokenToApi(result.identities[0].access_token)
-                        getData(result.identities[0].access_token)
+                        sendTokenToApi(result.identities[0].access_token);
+                        getData(result.identities[0].access_token);
                     },
                     error: function (error) {
                         console.log('Information failed to retrieve');

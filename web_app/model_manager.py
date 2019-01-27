@@ -1,40 +1,43 @@
 import hashlib
 import os
 import pickle
-import json
 
 import dateparser
+import pytz
 
 from .models import ProcessedEmail
+
+ATTACHMENTS = 'static/attachments'
 
 
 def get_attachments_dir():
     curr_dir = os.path.dirname(__file__)
-    att_dir = os.path.realpath(os.path.join(curr_dir, '../static/attachments'))
-    os.makedirs(att_dir, exist_ok=True)
+    att_dir = os.path.realpath(os.path.join(curr_dir, '..', ATTACHMENTS))
     return att_dir
 
 
 def insert_processed_email(user_id, message_id, date, from_, description, attachments, category):
-    att_dump = pickle.dumps(attachments)
-    attachment_hash = hashlib.md5(att_dump).hexdigest()
-    filename = "{}.pickle".format(attachment_hash)
-    attachment_location = os.path.join(get_attachments_dir(), filename)
+    attachment_hash = hashlib.md5(pickle.dumps(attachments)).hexdigest()
+    attachment_location = os.path.join(get_attachments_dir(), attachment_hash)
+    os.makedirs(attachment_location, exist_ok=True)
 
-    if not os.path.exists(attachment_location):
-        with open(attachment_location, "wb") as fd:
-            fd.write(att_dump)
+    for filename, data in attachments.items():
+        filepath = os.path.join(attachment_location, filename)
+        if not os.path.exists(filepath):
+            with open(filepath, "wb") as fd:
+                fd.write(data)
 
     ProcessedEmail.objects.update_or_create(
+        message_id=message_id,
         category=category,
         defaults=dict(
             message_id=message_id,
             category=category,
             user_id=user_id,
-            date=dateparser.parse(date[:-6]),
+            date=dateparser.parse(date[:-6]).replace(tzinfo=pytz.UTC),
             sender=from_,
             description=description,
-            attachment_location=attachment_location,
+            attachment_location=attachment_hash,
         )
     )
 
@@ -46,16 +49,22 @@ def get_processed_emails(user_id):
 
     full_emails = []
     for email in emails:
-        with open(email.attachment_location, "rb") as fd:
-            attachments = pickle.load(fd)
-            full_emails.append(dict(
-                user_id=email.user_id,
-                message_id=email.message_id,
-                date=email.date,
-                from_=email.sender,
-                description=email.description,
-                attachments=attachments,
-                category=email.category
-            ))
-    return full_emails
+        attachments = []
+        attachment_hash = email.attachment_location
+        for filename in os.listdir(os.path.join(get_attachments_dir(), attachment_hash)):
+            attachments.append({
+                'name': filename,
+                'body': os.path.join(ATTACHMENTS, attachment_hash, filename),
+            })
 
+        full_emails.append(dict(
+            user_id=email.user_id,
+            message_id=email.message_id,
+            date=str(email.date),
+            from_=email.sender,
+            description=email.description,
+            attachments=attachments,
+            category=email.category
+        ))
+
+    return full_emails
