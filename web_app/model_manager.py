@@ -1,6 +1,7 @@
 import hashlib
 import os
 import pickle
+import json
 
 import dateparser
 
@@ -25,7 +26,6 @@ def insert_processed_email(user_id, message_id, date, from_, description, attach
             fd.write(att_dump)
 
     ProcessedEmail.objects.update_or_create(
-        message_id=message_id,
         category=category,
         defaults=dict(
             message_id=message_id,
@@ -40,7 +40,7 @@ def insert_processed_email(user_id, message_id, date, from_, description, attach
 
 
 def get_processed_emails(user_id):
-    emails = ProcessedEmail.objects.get(user_id=user_id)
+    emails = ProcessedEmail.objects.filter(user_id=user_id)
     if emails is None:
         return None
 
@@ -57,4 +57,5 @@ def get_processed_emails(user_id):
                 attachments=attachments,
                 category=email.category
             ))
+    return full_emails
 
