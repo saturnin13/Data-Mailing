@@ -6,6 +6,18 @@
   <meta charset="UTF-8">
   <title>Data Mailing</title>
 
+  <!-- Vue JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.26/vue.min.js"></script>
+
+  <!-- Boostrap JS and Jquery -->
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+          integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+          crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+          integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+          crossorigin="anonymous"></script>
+
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
         integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
@@ -60,30 +72,20 @@
 
 
       <div class="tab-pane container active" id="tickets">
-        <div class="container">
-          <div class="row card mt-3">
+        <div class="container" id="mailing-data">
+
+          <div class="row card mt-3" v-for="mail in mails.tickets">
             <div class="card-header">
               <h2 class="mb-0" data-toggle="collapse" data-target="#collapseExample" aria-expanded="true" aria-controls="collapseOne">
                 <button class="btn btn-link text-left" type="button" >
-                  ticket@easyjet.com - easyJet booking reference: EWFB42M
+                  [[mail.from]] - [[mail.subject]]
                 </button>
               </h2>
             </div>
 
             <div id="collapseExample" class="collapse show" aria-labelledby="headingOne">
               <div class="card-body">
-                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf
-                moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod.
-                Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda
-                shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea
-                proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim
-                aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf
-                moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod.
-                Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda
-                shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea
-                proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim
-                aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                [[mail.body]]
               </div>
             </div>
           </div>
@@ -156,19 +158,43 @@
   </div>
 </div>
 
-<!-- Boostrap JS and Jquery -->
-<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
-        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
-        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
-        crossorigin="anonymous"></script>
 
 <!-- Auth0 -->
 <script src="https://cdn.auth0.com/js/auth0/9.5.1/auth0.min.js"></script>
 <script type="text/javascript">
 
+    Vue.config.delimiters = ['[[', ']]'];
+
+    var mailing_data = new Vue({
+        el: "#mailing-data",
+        data: {
+            mails: []
+        },
+        computed: {
+
+        },
+        watch: {
+            deep: true
+        },
+        methods: {
+
+        }
+    });
+
+    mailing_data.mails = {
+        tickets: [
+            {
+                from: "from your grand mother",
+                subject: "Hi I am a subject",
+                body: "tetstdftuscyuscouyvcsoauyfvwoyu"
+            }
+        ]
+    };
+</script>
+
+
+
+<script type="text/javascript">
     var webAuth = new auth0.WebAuth({
       domain: 'data-mailing.eu.auth0.com',
       clientID: 'Y7nGdEW-8tLQ0hkp8yOtd3SMYyA9m-5g',
