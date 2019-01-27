@@ -30,3 +30,12 @@ Admin site django http://localhost:8000/admin
 To generate the table processedemail of the db launch http://localhost:8000/
 
 delete the db when making changes
+
+New email
+
+Email: teamsaucisse2@gmail.com
+Password: Te4m S4ucisse
+
+Old email
+Email: zeteamsaucisse@gmail.com
+Password: WeAreTheT3amSo6
