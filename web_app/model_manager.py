@@ -1,3 +1,4 @@
+import hashlib
 import os
 import pickle
 
@@ -13,15 +14,22 @@ def get_attachments_dir():
 
 def insert_processed_email(user_id, date, from_, description, attachments,
                            category):
-    attachment_hash = str(hash(repr(attachments)))
+    att_dump = pickle.dumps(attachments)
+    attachment_hash = hashlib.md5(att_dump).hexdigest()
     filename = "{}.pickle".format(attachment_hash)
     attachment_location = os.path.join(get_attachments_dir(), filename)
+    print("Storing attachment at path " + attachment_location)
 
-    pickle.dump(attachments, attachment_location)
+    if not os.path.exists(attachment_location):
+        with open(attachment_location, "wb") as fd:
+            fd.write(att_dump)
 
     ProcessedEmail.objects.update_or_create(
-        user_id=user_id, date=date, sender=from_, description=description,
-        attachment_location=attachment_location, category=category
+        user_id=user_id,
+        defaults=dict(
+            user_id=user_id, date=date, sender=from_, description=description,
+            attachment_location=attachment_location, category=category
+        )
     )
 
 
@@ -30,7 +38,9 @@ def get_processed_email(user_id):
     if email is None:
         return None
 
-    attachments = pickle.load(email.attachment_location)
+    with open(email.attachment_location, "rb") as fd:
+        attachments = pickle.load(fd)
+
     return dict(
         user_id=email.user_id,
         date=email.date,
