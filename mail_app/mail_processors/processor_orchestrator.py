@@ -1,4 +1,4 @@
-from multiprocessing import Process
+from concurrent.futures import ThreadPoolExecutor
 
 from mail_app.mail import Mail
 from mail_app.mail_postprocessor.postprocessor import PostProcessor
@@ -10,7 +10,6 @@ from mail_app.mail_processors.ticket_processor import TicketProcessor
 
 
 class ProcessorOrchestrator:
-
     def __init__(self):
         self.application_processor = ApplicationProcessor()
         self.password_processor = PasswordProcessor()
@@ -22,13 +21,8 @@ class ProcessorOrchestrator:
     def process_and_insert(self, processing_fn, mail: Mail):
         self.postprocessor.post_process(processing_fn(mail))
 
-
     def process_all_mails(self, mails: [Mail]):
-        for mail in mails:
-            funs = [self.application_processor.process, self.password_processor.process,
-                    self.promo_code_processor.process, self.receipt_processor.process, self.ticket_processor.process]
-            processes = [Process(target=self.process_and_insert, args=(process_fn, mail,)) for process_fn in funs]
-            for process in processes:
-                process.start()
-            for process in processes:
-                process.join()
+        for fun in [self.application_processor.process, self.password_processor.process,
+                    self.promo_code_processor.process, self.receipt_processor.process, self.ticket_processor.process]:
+            with ThreadPoolExecutor(max_workers=50) as executor:
+                executor.map(lambda data: self.process_and_insert(fun, mails), mails)

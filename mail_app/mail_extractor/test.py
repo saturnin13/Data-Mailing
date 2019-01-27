@@ -6,7 +6,6 @@ import pickle
 import re
 from datetime import datetime
 
-import dateutil.parser as parser
 from bs4 import BeautifulSoup
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -14,6 +13,7 @@ from googleapiclient.discovery import build
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
+
 
 def main():
     """Shows basic usage of the Gmail API.
@@ -105,32 +105,73 @@ def main():
     #     print(temp_dict)
 
     # Call the Gmail API
-    results = service.users().messages().list(userId='me').execute()
+    USER_ID = 'me'
+    results = service.users().messages().list(userId=USER_ID).execute()
 
-    for m in results['messages'][2:3]:
-        print(service.users().messages().get(userId='me', id=m['id']).execute()['payload'])
+    for i, m in enumerate(results['messages'][0:10]):
+        print('MESSAGE #%d\n' % i)
+        # message = service.users().messages().get(userId=USER_ID, id=m['id'], format='raw').execute()
 
-        message = service.users().messages().get(userId='me', id=m['id'], format='raw').execute()
-        message2 = service.users().messages().get(userId='me', id=m['id'], format='full').execute()
-        attachment = service.users().messages().attachments().get(userId='me', messageId=m['id'], id='ANGjdJ94kr3hwDlYNg52eAjITiklR_Rz7wPsocoAHN3FWDUIHxpud1ak-S8IBfIzgImJSQASHM_Uj82g5BulidHGIJOY8oCBEoT1m7UOymU9OaZGjIQUoNggLm2EfG0Cvzc7igxCaZsb1JIpUhwXwXNft6llCfb-D2cC0Gazd8lb6wC3rMYRGpvwzwVjiElfFVW2l4Gt3zOkdwk6vQ57mvW1CPNluB5fYSlgbTiLplARrvet7iSW_k5igtwNY5_zXrE3mI_FXFamySeHOzJ0v6esp2fDxClTCNqZYCI25HENub0k_pSrQHawRV5ZbPfnO5dikfIcpyY9R2VZINqxzA0YoQPP8f2x5-_6OIhdfYaL8M9U7pfUqUMQmVxEgoPSlhPigHI6D5HZXbkJl_FV').execute()
+        message_full = service\
+            .users()\
+            .messages()\
+            .get(userId=USER_ID, id=m['id'], format='full')\
+            .execute()\
+            .get('payload', {})
+        msg_headers = message_full.get('headers', [])
 
-        print('Attachment')
-        print(attachment)
-        print()
+        #
+        # Header
+        #
 
-        msg_str = str(base64.urlsafe_b64decode(message['raw'].encode('UTF-8')))
+        required_headers = ['From', 'Subject', 'Date']
 
-        time = datetime.fromtimestamp(int(message['internalDate']) / 1000)
-        user_id = 'TODO'
-        from_ = find_regex("smtp.mailfrom=(.*?)\\\\r", msg_str).replace(';', '')
-        subject = find_regex("Subject: (.*?)\\\\r", msg_str)
-        body = msg_str
-        attachments =
+        headers = {}
+        for header in msg_headers:
+            name, value = header['name'], header['value']
+            if name in required_headers:
+                headers[name] = value
 
-        print('Time: ' + str(time))
-        print('from_: ' + from_)
-        print('subject: ' + subject)
-        print()
+        print('headers: ', headers)
+
+        #
+        # Attachments
+        #
+
+        def parse_content(content, body_, attachments_):
+            msg_body = content.get('body', {})
+            msg_parts = content.get('parts', [])
+
+            if msg_body == {} and msg_parts == []:
+                return body_, attachments_
+
+            # Is attachment?
+            att_id = msg_body.get('attachmentId')
+            if att_id:
+                att = service \
+                    .users() \
+                    .messages() \
+                    .attachments() \
+                    .get(userId=USER_ID, messageId=m['id'], id=att_id) \
+                    .execute()
+                attachments_[content['filename']] = base64.urlsafe_b64decode(att['data'])
+
+            # Is text?
+            text = msg_body.get('data')
+            if text:
+                body_ += str(base64.urlsafe_b64decode(text))
+
+            for part in msg_parts:
+                b, c = parse_content(part, body_, attachments_)
+                body_ += b
+                attachments_.update(c)
+            return body_, attachments_
+
+        body, attachments = parse_content(message_full, "", {})
+        print('Attachments: ', {(k, v[:50]) for k, v in attachments.items()})
+        print('Body: ', body)
+
+        return USER_ID, headers, body, attachments
 
 
 def find_regex(regex, body):
