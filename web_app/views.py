@@ -1,18 +1,16 @@
 import base64
 import re
-from datetime import datetime
 
+import httplib2
 from django.http import HttpResponse
 from django.utils.decorators import method_decorator
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
-import httplib2
 from googleapiclient.discovery import build
 from oauth2client.client import AccessTokenCredentials
 
 from mail_app.mail import Mail
-from mail_app.mail_postprocessor.postprocessor import PostProcessor
 from mail_app.mail_processors.processor_orchestrator import ProcessorOrchestrator
 
 
@@ -105,7 +103,7 @@ class UserView(generic.View):
             )
 
         # Process all mails and output them to db
-        ProcessorOrchestrator().process_all_mails(mails)
+        ProcessorOrchestrator().process_no_parallel(mails)
 
         return HttpResponse('Gut !')
 
