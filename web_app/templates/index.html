@@ -45,7 +45,7 @@
     <!-- Nav tabs -->
     <ul class="nav nav-tabs mt-4">
       <li class="nav-item" v-for="category in categories">
-        <a class="nav-link" :class="category.name != 'Tickets' ? 'active' : ''" data-toggle="tab" href="#[[category.name]]">[[category.name]]&nbsp;<span class="badge badge-success float-right">[[category.mails.length]]</span></a>
+        <a class="nav-link" :class="category.name == 'Ticket' ? 'active' : ''" data-toggle="tab" href="#[[category.name]]">[[category.name]]&nbsp;<span class="badge badge-success float-right">[[category.mails.length]]</span></a>
       </li>
 {#      <li class="nav-item">#}
 {#        <a class="nav-link active" data-toggle="tab" href="#tickets">Tickets&nbsp;<span class="badge badge-success float-right">3</span></a>#}
@@ -67,8 +67,7 @@
     <!-- Tab panes -->
     <div class="tab-content mt-1 pb-3">
 
-      <div v-for="category in categories">
-        <div class="tab-pane container" :class="category.name != 'Tickets' ? 'active' : 'fade'" id="[[category.name]]">
+        <div class="tab-pane container" v-for="category in categories" :class="category.name == 'Ticket' ? 'active' : 'fade'" id="[[category.name]]">
           <div class="container">
 
             <div v-for="mail in category.mails">
@@ -81,7 +80,7 @@
                   </h2>
                 </div>
 
-                <div id="collapse[[mail.message_id]]" class="collapse" :class="category.name != 'Tickets' ? 'show' : ''" aria-labelledby="headingOne">
+                <div id="collapse[[mail.message_id]]" class="collapse" :class="category.name == 'Ticket' ? 'show' : ''" aria-labelledby="headingOne">
                   <div class="card-body">
                     [[mail.description]]
                   </div>
@@ -92,7 +91,6 @@
 
           </div>
         </div>
-      </div>
 
 {#      <div class="tab-pane container active" id="tickets">#}
 {#        <div class="container">#}
