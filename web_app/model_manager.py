@@ -12,7 +12,7 @@ def get_attachments_dir():
     return att_dir
 
 
-def insert_processed_email(user_id, date, from_, description, attachments, category):
+def insert_processed_email(user_id, message_id, date, from_, description, attachments, category):
     att_dump = pickle.dumps(attachments)
     attachment_hash = hashlib.md5(att_dump).hexdigest()
     filename = "{}.pickle".format(attachment_hash)
@@ -23,12 +23,16 @@ def insert_processed_email(user_id, date, from_, description, attachments, categ
         with open(attachment_location, "wb") as fd:
             fd.write(att_dump)
 
+    print(user_id, message_id, date, from_, category)
+
     ProcessedEmail.objects.update_or_create(
         user_id=user_id,
-        defaults=dict(
-            user_id=user_id, date=date, sender=from_, description=description,
-            attachment_location=attachment_location, category=category
-        )
+        message_id=message_id,
+        date=date,
+        sender=from_,
+        description=description,
+        attachment_location=attachment_location,
+        category=category
     )
 
 
@@ -42,6 +46,7 @@ def get_processed_email(user_id):
 
     return dict(
         user_id=email.user_id,
+        message_id=email.message_id,
         date=email.date,
         from_=email.sender,
         description=email.description,

@@ -14,7 +14,7 @@ class PromoCodeProcessor(AbstractProcessor):
 
     def process(self, mail):
         if self.__general_conditions(mail):
-            return ProcessedMail(mail.user_id, mail.from_, self.category, mail.body, mail.time, mail.attachments)
+            return ProcessedMail(mail.user_id, mail.message_id, mail.from_, self.category, mail.body, mail.time, mail.attachments)
 
     ############################################ Conditions ############################################
 

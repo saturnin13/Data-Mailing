@@ -9,6 +9,9 @@ class PostProcessor:
             self.post_process(m)
 
     def post_process(self, mail: ProcessedMail):
+        print('mail here: ' + str(mail))
+
         if mail:
-            insert_processed_email(user_id=mail.user_id, date=mail.date, from_=mail.from_, description=mail.description,
-                               attachments=mail.attachments, category=mail.category)
+            insert_processed_email(user_id=mail.user_id, message_id=mail.message_id,
+                                   date=mail.date, from_=mail.from_, description=mail.description,
+                                   attachments=mail.attachments, category=mail.category)

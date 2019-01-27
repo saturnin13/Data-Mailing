@@ -34,24 +34,74 @@ class UserView(generic.View):
         http = credentials.authorize(http)
         service = build('gmail', 'v1', http=http)
 
-        results = service.users().messages().list(userId='me').execute()
-
+        # Call the Gmail API
         mails = []
+        USER_ID = 'me'
+        results = service.users().messages().list(userId=USER_ID).execute()
 
-        for m in results['messages']:
-            message = service.users().messages().get(userId='me', id=m['id'], format='raw').execute()
+        for i, m in enumerate(results['messages'][0:10]):
+            print('MESSAGE #%d\n' % i)
+            # message = service.users().messages().get(userId=USER_ID, id=m['id'], format='raw').execute()
 
-            msg_str = str(base64.urlsafe_b64decode(message['raw'].encode('UTF-8')))
+            message_full = service \
+                .users() \
+                .messages() \
+                .get(userId=USER_ID, id=m['id'], format='full') \
+                .execute() \
+                .get('payload', {})
+            msg_headers = message_full.get('headers', [])
 
-            time = datetime.fromtimestamp(int(message['internalDate']) / 1000)
-            user_id = token
-            from_ = find_regex("smtp.mailfrom=(.*?)\\\\r", msg_str).replace(';', '')
-            subject = find_regex("Subject: (.*?)\\\\r", msg_str)
-            body = msg_str
-            attachments = {}
+            #
+            # Header
+            #
+
+            required_headers = ['From', 'Subject', 'Date']
+
+            headers = {}
+            for header in msg_headers:
+                name, value = header['name'], header['value']
+                if name in required_headers:
+                    headers[name] = value
+
+            print('headers: ', headers)
+
+            #
+            # Attachments
+            #
+
+            def parse_content(content, body_, attachments_):
+                msg_body = content.get('body', {})
+                msg_parts = content.get('parts', [])
+
+                if msg_body == {} and msg_parts == []:
+                    return body_, attachments_
+
+                # Is attachment?
+                att_id = msg_body.get('attachmentId')
+                if att_id:
+                    att = service \
+                        .users() \
+                        .messages() \
+                        .attachments() \
+                        .get(userId=USER_ID, messageId=m['id'], id=att_id) \
+                        .execute()
+                    attachments_[content['filename']] = base64.urlsafe_b64decode(att['data'])
+
+                # Is text?
+                text = msg_body.get('data')
+                if text:
+                    body_ += str(base64.urlsafe_b64decode(text))
+
+                for part in msg_parts:
+                    b, c = parse_content(part, body_, attachments_)
+                    body_ += b
+                    attachments_.update(c)
+                return body_, attachments_
+
+            body, attachments = parse_content(message_full, "", {})
 
             mails.append(
-                Mail(user_id, from_, subject, body, attachments, time)
+                Mail(token, m['id'], headers['From'], headers['Subject'], body, attachments, headers['Date'])
             )
 
         # Process all mails and output them to db

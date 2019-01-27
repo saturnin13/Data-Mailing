@@ -23,7 +23,7 @@ class TicketProcessor(AbstractProcessor):
             schema_script = soup.find('script', type="application/ld+json")
             if schema_script:
                 schema_json = json.loads(schema_script.text)
-                processed_mail = ProcessedMail(mail.user_id, mail.from_, category=self.category,
+                processed_mail = ProcessedMail(mail.user_id, mail.message_id, mail.from_, category=self.category,
                                                description=schema_json['reservationFor']['name'],
                                                date=mail.time, attachments=mail.attachments, specifics=schema_json)
                 attrs = vars(processed_mail)
