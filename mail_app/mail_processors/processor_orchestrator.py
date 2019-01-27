@@ -19,9 +19,15 @@ class ProcessorOrchestrator:
 
     def process_all_mails(self, mails: [Mail]):
         for mail in mails:
-            funs = [self.application_processor.process, self.password_processor.process,
-                    self.promo_code_processor.process, self.receipt_processor.process, self.ticket_processor.process]
+            funs = [self.application_processor.process,
+                    self.password_processor.process,
+                    self.promo_code_processor.process,
+                    self.receipt_processor.process,
+                    self.ticket_processor.process
+                    ]
+
             processes = [Process(target=process_fn, args=(mail,)) for process_fn in funs]
+
             for process in processes:
                 process.start()
                 process.join()

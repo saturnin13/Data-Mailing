@@ -12,8 +12,7 @@ def get_attachments_dir():
     return att_dir
 
 
-def insert_processed_email(user_id, date, from_, description, attachments,
-                           category):
+def insert_processed_email(user_id, date, from_, description, attachments, category):
     att_dump = pickle.dumps(attachments)
     attachment_hash = hashlib.md5(att_dump).hexdigest()
     filename = "{}.pickle".format(attachment_hash)
