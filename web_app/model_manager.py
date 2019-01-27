@@ -2,6 +2,8 @@ import hashlib
 import os
 import pickle
 
+import dateparser
+
 from .models import ProcessedEmail
 
 
@@ -17,27 +19,28 @@ def insert_processed_email(user_id, message_id, date, from_, description, attach
     attachment_hash = hashlib.md5(att_dump).hexdigest()
     filename = "{}.pickle".format(attachment_hash)
     attachment_location = os.path.join(get_attachments_dir(), filename)
-    print("Storing attachment at path " + attachment_location)
 
     if not os.path.exists(attachment_location):
         with open(attachment_location, "wb") as fd:
             fd.write(att_dump)
 
-    print(user_id, message_id, date, from_, category)
-
     ProcessedEmail.objects.update_or_create(
-        user_id=user_id,
         message_id=message_id,
-        date=date,
-        sender=from_,
-        description=description,
-        attachment_location=attachment_location,
-        category=category
+        category=category,
+        defaults=dict(
+            message_id=message_id,
+            category=category,
+            user_id=user_id,
+            date=dateparser.parse(date[:-6]),
+            sender=from_,
+            description=description,
+            attachment_location=attachment_location,
+        )
     )
 
 
 def get_processed_email(user_id):
-    email = ProcessedEmail.objects.get(pk=user_id)
+    email = ProcessedEmail.objects.get(user_id=user_id)
     if email is None:
         return None
 

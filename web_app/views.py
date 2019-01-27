@@ -12,6 +12,7 @@ from oauth2client.client import AccessTokenCredentials
 
 from mail_app.mail import Mail
 from mail_app.mail_processors.processor_orchestrator import ProcessorOrchestrator
+from web_app.models import ProcessedEmail
 
 
 class Index(TemplateView):
@@ -38,7 +39,6 @@ class UserView(generic.View):
         results = service.users().messages().list(userId=USER_ID).execute()
 
         for i, m in enumerate(results['messages'][0:10]):
-            print('MESSAGE #%d\n' % i)
             # message = service.users().messages().get(userId=USER_ID, id=m['id'], format='raw').execute()
 
             message_full = service \
@@ -60,8 +60,6 @@ class UserView(generic.View):
                 name, value = header['name'], header['value']
                 if name in required_headers:
                     headers[name] = value
-
-            print('headers: ', headers)
 
             #
             # Attachments

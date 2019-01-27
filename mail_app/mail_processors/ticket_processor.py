@@ -21,15 +21,14 @@ class TicketProcessor(AbstractProcessor):
         if self.__general_conditions(mail):
             soup = BeautifulSoup(mail.body, 'html.parser')
             schema_script = soup.find('script', type="application/ld+json")
-            if schema_script:
-                schema_json = json.loads(schema_script.text)
+            if schema_script and schema_script.text:
+                schema_json = json.loads(schema_script.text.replace('\\n', '').replace('\\r', '').strip())
                 processed_mail = ProcessedMail(mail.user_id, mail.message_id, mail.from_, category=self.category,
                                                description=schema_json['reservationFor']['name'],
                                                date=mail.time, attachments=mail.attachments, specifics=schema_json)
                 attrs = vars(processed_mail)
-                print(', '.join("%s: %s" % item for item in attrs.items()))
                 return processed_mail
-            return ProcessedMail(mail.user_id, mail.from_, self.category, mail.body, mail.time, mail.attachments)
+            return ProcessedMail(mail.user_id, mail.message_id, mail.from_, self.category, mail.body, mail.time, mail.attachments)
 
     ############################################ Conditions ############################################
 
