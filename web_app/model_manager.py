@@ -76,4 +76,7 @@ def get_processed_emails(user_id):
     }
     for e in full_emails:
         final_emails[e['category']] += [e]
-    return final_emails
+
+    return [
+        {'name': k, 'mails': v} for k, v in final_emails.items()
+    ]
