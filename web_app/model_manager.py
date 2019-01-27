@@ -20,7 +20,7 @@ def insert_processed_email(user_id, date, from_, description, attachments,
     pickle.dump(attachments, attachment_location)
 
     ProcessedEmail.objects.update_or_create(
-        user_id=user_id, date=date, from_=from_, description=description,
+        user_id=user_id, date=date, sender=from_, description=description,
         attachment_location=attachment_location, category=category
     )
 
@@ -34,7 +34,7 @@ def get_processed_email(user_id):
     return dict(
         user_id=email.user_id,
         date=email.date,
-        from_=email.date,
+        from_=email.sender,
         description=email.description,
         attachments=attachments,
         category=email.category
