@@ -1,7 +1,4 @@
-<<<<<<< Updated upstream
 import json
-=======
->>>>>>> Stashed changes
 import re
 
 from bs4 import BeautifulSoup
