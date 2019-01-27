@@ -1,4 +1,7 @@
+<<<<<<< Updated upstream
 import json
+=======
+>>>>>>> Stashed changes
 import re
 
 from bs4 import BeautifulSoup
@@ -30,12 +33,13 @@ class TicketProcessor(AbstractProcessor):
                 return processed_mail
             return ProcessedMail(mail.user_id, mail.message_id, mail.from_, self.category, mail.body, mail.time, mail.attachments)
 
+
     ############################################ Conditions ############################################
 
     def __general_conditions(self, mail: Mail):
         return (mail.attachments or
-                any(re.search(keyword, mail.body.lower()) for keyword in self.ticket_keyword)) and \
-               (any(re.search(keyword, mail.subject.lower()) for keyword in self.general_keywords) or
-                any(re.search(keyword, mail.body.lower()) for keyword in self.general_keywords) or
-                any(re.search(keyword, name.lower()) for name, _ in mail.attachments.items() for keyword in
+                any(re.search(mail.body.lower(), keyword) for keyword in self.ticket_keyword)) and \
+               (any(re.search(mail.subject.lower(), keyword) for keyword in self.general_keywords) or
+                any(re.search(mail.body.lower(), keyword) for keyword in self.general_keywords) or
+                any(re.search(attachment["name"].lower(), keyword) for attachment in mail.attachments for keyword in
                     self.general_keywords))
