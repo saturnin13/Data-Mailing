@@ -34,7 +34,4 @@ class TicketProcessor(AbstractProcessor):
     ############################################ Conditions ############################################
 
     def __general_conditions(self, mail: Mail):
-        return (mail.attachments or
-                any(re.search(mail.body.lower(), keyword) for keyword in self.ticket_keyword)) and \
-               (any(re.search(mail.subject.lower(), keyword) for keyword in self.general_keywords) or
-                any(re.search(mail.body.lower(), keyword) for keyword in self.general_keywords))
+        return any(re.search(mail.subject.lower(), keyword) for keyword in self.general_keywords)
