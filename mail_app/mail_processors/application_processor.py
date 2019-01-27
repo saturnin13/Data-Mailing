@@ -6,8 +6,8 @@ from mail_app.processed_mail import ProcessedMail
 
 class ApplicationProcessor(AbstractProcessor):
 
-    general_keywords = ["interview", "application status", "follow up", "take home test", "next stage",
-                        "your application", "thank you for applying"]
+    general_keywords = ["application status", "follow up", "take home test", "next stage",
+                        "your application", "thank you for applying", "interview"]
 
     def __init__(self):
         super().__init__()
@@ -20,7 +20,6 @@ class ApplicationProcessor(AbstractProcessor):
     ############################################ Conditions ############################################
 
     def __general_conditions(self, mail: Mail):
-        return mail.attachments and \
-           (any(re.search(keyword, mail.subject.lower()) for keyword in self.general_keywords) or
+        return (any(re.search(keyword, mail.subject.lower()) for keyword in self.general_keywords) or
             any(re.search(keyword, mail.body.lower()) for keyword in self.general_keywords) or
             any(re.search(keyword, name.lower()) for name, _ in mail.attachments.items() for keyword in self.general_keywords))

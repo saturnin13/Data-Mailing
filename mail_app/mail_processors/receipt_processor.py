@@ -6,7 +6,7 @@ from mail_app.processed_mail import ProcessedMail
 
 
 class ReceiptProcessor(AbstractProcessor):
-    general_keywords = ["receipt", "transfer sent"]
+    general_keywords = ["transfer sent", "receipt"]
 
     def __init__(self):
         super().__init__()
@@ -19,8 +19,7 @@ class ReceiptProcessor(AbstractProcessor):
     ############################################ Conditions ############################################
 
     def __general_conditions(self, mail: Mail):
-        return (mail.attachments or
-                any(re.search(keyword, mail.subject.lower()) for keyword in self.general_keywords) or
-                any(re.search(keyword, mail.body.lower()) for keyword in self.general_keywords) or
+        return any(re.search(keyword, mail.subject.lower()) for keyword in self.general_keywords) or \
+                any(re.search(keyword, mail.body.lower()) for keyword in self.general_keywords) or \
                 any(re.search(keyword, name.lower()) for name, _ in mail.attachments.items() for keyword in
-                    self.general_keywords))
+                    self.general_keywords)

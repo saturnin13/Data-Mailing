@@ -10,7 +10,7 @@ from mail_app.processed_mail import ProcessedMail
 
 class TicketProcessor(AbstractProcessor):
 
-    general_keywords = ["ticket", "boarding pass", "boardingpass", "booking reference"]
+    general_keywords = ["boarding pass", "boardingpass", "booking reference", "ticket"]
     ticket_keyword = ["qrcode"]
 
     def __init__(self):
