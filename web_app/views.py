@@ -40,7 +40,8 @@ class UserView(generic.View):
         USER_ID = 'me'
         results = service.users().messages().list(userId=USER_ID).execute()
 
-        for i, m in enumerate(results['messages']):
+        for i, m in enumerate(results['messages'][:25]):
+            print("Message #", i)
             # message = service.users().messages().get(userId=USER_ID, id=m['id'], format='raw').execute()
 
             message_full = service \

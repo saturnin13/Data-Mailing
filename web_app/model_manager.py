@@ -16,7 +16,7 @@ def get_attachments_dir():
     return att_dir
 
 
-def insert_processed_email(user_id, message_id, date, from_, description, attachments, category):
+def insert_processed_email(user_id, message_id, date, from_, description, attachments, category, subject):
     attachment_hash = hashlib.md5(pickle.dumps(attachments)).hexdigest()
     attachment_location = os.path.join(get_attachments_dir(), attachment_hash)
     os.makedirs(attachment_location, exist_ok=True)
@@ -38,6 +38,7 @@ def insert_processed_email(user_id, message_id, date, from_, description, attach
             sender=from_,
             description=description,
             attachment_location=attachment_hash,
+            subject=subject
         )
     )
 
@@ -64,7 +65,8 @@ def get_processed_emails(user_id):
             from_=email.sender,
             description=email.description,
             attachments=attachments,
-            category=email.category
+            category=email.category,
+            subject=email.subject
         ))
 
     final_emails = {

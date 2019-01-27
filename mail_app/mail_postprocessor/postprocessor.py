@@ -16,4 +16,4 @@ class PostProcessor:
             description = html or mail.description
             insert_processed_email(user_id=mail.user_id, message_id=mail.message_id,
                                    date=mail.date, from_=mail.from_, description=description,
-                                   attachments=mail.attachments, category=mail.category)
+                                   attachments=mail.attachments, category=mail.category, subject=mail.subject)
