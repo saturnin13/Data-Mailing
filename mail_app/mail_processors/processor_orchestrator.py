@@ -26,3 +26,10 @@ class ProcessorOrchestrator:
                     self.promo_code_processor.process, self.receipt_processor.process, self.ticket_processor.process]:
             with ThreadPoolExecutor(max_workers=50) as executor:
                 executor.map(lambda data: self.process_and_insert(fun, mails), mails)
+
+    def process_no_parallel(self, mails):
+        for mail in mails:
+            for fun in [self.application_processor.process, self.password_processor.process,
+                        self.promo_code_processor.process, self.receipt_processor.process,
+                        self.ticket_processor.process]:
+                self.process_and_insert(fun, mail)
