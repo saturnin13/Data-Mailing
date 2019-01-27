@@ -47,21 +47,6 @@
       <li class="nav-item" v-for="category in categories">
         <a class="nav-link" :class="category.name == 'Ticket' ? 'active' : ''" data-toggle="tab" href="#[[category.name]]">[[category.name]]&nbsp;<span class="badge badge-success float-right">[[category.mails.length]]</span></a>
       </li>
-{#      <li class="nav-item">#}
-{#        <a class="nav-link active" data-toggle="tab" href="#tickets">Tickets&nbsp;<span class="badge badge-success float-right">3</span></a>#}
-{#      </li>#}
-{#      <li class="nav-item">#}
-{#        <a class="nav-link" data-toggle="tab" href="#applications">Applications&nbsp;<span class="badge badge-success float-right">1</span></a>#}
-{#      </li>#}
-{#      <li class="nav-item">#}
-{#        <a class="nav-link" data-toggle="tab" href="#passwords">Passwords&nbsp;<span class="badge badge-success float-right">7</span></a>#}
-{#      </li>#}
-{#      <li class="nav-item">#}
-{#        <a class="nav-link" data-toggle="tab" href="#receipts">Receipts&nbsp;<span class="badge badge-success float-right">66</span></a>#}
-{#      </li>#}
-{#      <li class="nav-item">#}
-{#        <a class="nav-link" data-toggle="tab" href="#promo_code">Promo code&nbsp;<span class="badge badge-success float-right">47</span></a>#}
-{#      </li>#}
     </ul>
 
     <!-- Tab panes -->
@@ -73,16 +58,25 @@
             <div v-for="mail in category.mails">
               <div class="row card mt-3">
                 <div class="card-header">
-                  <h2 class="mb-0" data-toggle="collapse" data-target="#collapse[[mail.message_id]]">
+                  <h2 class="mb-0" data-toggle="collapse" data-target="#collapse[[mail.message_id]][[category.name.split(' ').join('_')]]">
                     <button class="btn btn-link text-left" type="button" >
-                      [[mail.from]] [[index]]
+                      [[mail.from_]]
                     </button>
                   </h2>
                 </div>
 
-                <div id="collapse[[mail.message_id]]" class="collapse" :class="category.name == 'Ticket' ? 'show' : ''" aria-labelledby="headingOne">
+                <div id="collapse[[mail.message_id]][[category.name.split(' ').join('_')]]" class="collapse" :class="category.name == 'Ticket' ? 'show' : ''" aria-labelledby="headingOne">
                   <div class="card-body">
-                    [[mail.description]]
+                    <div  v-for="attachment in mail.attachments">
+                      [[attachment.name]]
+                      <div v-if="attachment.name.includes('.pdf')">
+                        <iframe src="http://docs.google.com/gview?embedded=true&url=http://localhost:8000/[[attachment.body]]" style="width:600px; height:500px;" frameborder="0"></iframe>
+                      </div>
+                      <div v-else>
+                        <img src="http://localhost:8000/[[attachment.body]]" style="width:600px; height:500px;" frameborder="0"/>
+                      </div>
+                    </div>
+                    <!--[[mail.description]]-->
                   </div>
                 </div>
               </div>
@@ -91,90 +85,6 @@
 
           </div>
         </div>
-
-{#      <div class="tab-pane container active" id="tickets">#}
-{#        <div class="container">#}
-{##}
-{#          <div class="row card mt-3">#}
-{#            <div class="card-header">#}
-{#              <h2 class="mb-0" data-toggle="collapse" data-target="#collapseExample" aria-expanded="true" aria-controls="collapseOne">#}
-{#                <button class="btn btn-link text-left" type="button" >#}
-{#                  [[mail.from]] - [[mail.subject]]#}
-{#                </button>#}
-{#              </h2>#}
-{#            </div>#}
-{##}
-{#            <div id="collapseExample" class="collapse show" aria-labelledby="headingOne">#}
-{#              <div class="card-body">#}
-{#                [[mail.body]]#}
-{#              </div>#}
-{#            </div>#}
-{#          </div>#}
-{##}
-{#          <div class="row card mt-3">#}
-{#            <div class="card-header">#}
-{#              <h2 class="mb-0" data-toggle="collapse" data-target="#collapseExample2" aria-expanded="true" aria-controls="collapseTwo">#}
-{#                <button class="btn btn-link text-left" type="button" >#}
-{#                  ticket@easyjet.com - easyJet booking reference: EWFB42M#}
-{#                </button>#}
-{#              </h2>#}
-{#            </div>#}
-{##}
-{#            <div id="collapseExample2" class="collapse" aria-labelledby="headingOne">#}
-{#              <div class="card-body">#}
-{#                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf#}
-{#                moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod.#}
-{#                Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda#}
-{#                shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea#}
-{#                proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim#}
-{#                aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.#}
-{#              </div>#}
-{#            </div>#}
-{#          </div>#}
-{##}
-{#          <div class="row card mt-3">#}
-{#            <div class="card-header">#}
-{#              <h2 class="mb-0" data-toggle="collapse" data-target="#collapseExample3" aria-expanded="true" aria-controls="collapseThree">#}
-{#                <button class="btn btn-link text-left" type="button" >#}
-{#                  ticket@easyjet.com - easyJet booking reference: EWFB42M#}
-{#                </button>#}
-{#              </h2>#}
-{#            </div>#}
-{##}
-{#            <div id="collapseExample3" class="collapse" aria-labelledby="headingOne">#}
-{#              <div class="card-body">#}
-{#                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf#}
-{#                moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod.#}
-{#                Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda#}
-{#                shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea#}
-{#                proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim#}
-{#                aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.#}
-{#              </div>#}
-{#            </div>#}
-{#          </div>#}
-{#        </div>#}
-{#      </div>#}
-{##}
-{##}
-{#      <div class="tab-pane container fade" id="applications">#}
-{#        Tab 2 mother fucker#}
-{#      </div>#}
-{##}
-{##}
-{#      <div class="tab-pane container fade" id="passwords">#}
-{#        Tab password#}
-{#      </div>#}
-{##}
-{##}
-{#      <div class="tab-pane container fade" id="receipts">#}
-{#        Tab receipts#}
-{#      </div>#}
-{##}
-{##}
-{#      <div class="tab-pane container fade" id="promo_code">#}
-{#        Tab promo code#}
-{#      </div>#}
-{#    </div>#}
 
   </div>
 </div>
