@@ -1,9 +1,9 @@
 import hashlib
 import os
 import pickle
-import json
 
 import dateparser
+import pytz
 
 from .models import ProcessedEmail
 
@@ -26,12 +26,13 @@ def insert_processed_email(user_id, message_id, date, from_, description, attach
             fd.write(att_dump)
 
     ProcessedEmail.objects.update_or_create(
+        message_id=message_id,
         category=category,
         defaults=dict(
             message_id=message_id,
             category=category,
             user_id=user_id,
-            date=dateparser.parse(date[:-6]),
+            date=dateparser.parse(date[:-6]).replace(tzinfo=pytz.UTC),
             sender=from_,
             description=description,
             attachment_location=attachment_location,
@@ -47,15 +48,26 @@ def get_processed_emails(user_id):
     full_emails = []
     for email in emails:
         with open(email.attachment_location, "rb") as fd:
-            attachments = pickle.load(fd)
+
+            data = pickle.load(fd)
+            attachments = []
+
+            for name in data:
+                attachments.append(
+                    {
+                        'name': name,
+                        'body': data[name].decode('utf-8'),
+                    }
+                )
+
             full_emails.append(dict(
                 user_id=email.user_id,
                 message_id=email.message_id,
-                date=email.date,
+                date=str(email.date),
                 from_=email.sender,
                 description=email.description,
                 attachments=attachments,
                 category=email.category
             ))
-    return full_emails
 
+    return full_emails
