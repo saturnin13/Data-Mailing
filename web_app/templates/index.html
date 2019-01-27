@@ -45,7 +45,7 @@
     <!-- Nav tabs -->
     <ul class="nav nav-tabs mt-4">
       <li class="nav-item" v-for="category in categories">
-        <a class="nav-link" data-toggle="tab" href="#[[category.name]]">[[category.name]]&nbsp;<span class="badge badge-success float-right">[[category.mails.length]]</span></a>
+        <a class="nav-link" :class="category.name == 'Ticket' ? 'active' : ''" data-toggle="tab" href="#[[category.name]]">[[category.name]]&nbsp;<span class="badge badge-success float-right">[[category.mails.length]]</span></a>
       </li>
 {#      <li class="nav-item">#}
 {#        <a class="nav-link active" data-toggle="tab" href="#tickets">Tickets&nbsp;<span class="badge badge-success float-right">3</span></a>#}
@@ -67,22 +67,20 @@
     <!-- Tab panes -->
     <div class="tab-content mt-1 pb-3">
 
-      <div v-for="category in categories">
-        <div v-for="mail in category.mails">
-          <div class="tab-pane container active" id="[[category.name]]">
+        <div class="tab-pane container" v-for="category in categories" :class="category.name == 'Ticket' ? 'active' : 'fade'" id="[[category.name]]">
+          <div class="container">
 
-            <div class="container">
-
+            <div v-for="mail in category.mails">
               <div class="row card mt-3">
                 <div class="card-header">
-                  <h2 class="mb-0" data-toggle="collapse" data-target="#collapseExample">
+                  <h2 class="mb-0" data-toggle="collapse" data-target="#collapse[[mail.message_id]]">
                     <button class="btn btn-link text-left" type="button" >
-                      [[mail.from]]
+                      [[mail.from]] [[index]]
                     </button>
                   </h2>
                 </div>
 
-                <div id="collapseExample" class="collapse show" aria-labelledby="headingOne">
+                <div id="collapse[[mail.message_id]]" class="collapse" :class="category.name == 'Ticket' ? 'show' : ''" aria-labelledby="headingOne">
                   <div class="card-body">
                       <span v-html="mail.description"></span>
                   </div>
@@ -93,7 +91,6 @@
 
           </div>
         </div>
-      </div>
 
 {#      <div class="tab-pane container active" id="tickets">#}
 {#        <div class="container">#}
@@ -156,28 +153,28 @@
 {#            </div>#}
 {#          </div>#}
 {#        </div>#}
-      </div>
-
-
-      <div class="tab-pane container fade" id="applications">
-        Tab 2 mother fucker
-      </div>
-
-
-      <div class="tab-pane container fade" id="passwords">
-        Tab password
-      </div>
-
-
-      <div class="tab-pane container fade" id="receipts">
-        Tab receipts
-      </div>
-
-
-      <div class="tab-pane container fade" id="promo_code">
-        Tab promo code
-      </div>
-    </div>
+{#      </div>#}
+{##}
+{##}
+{#      <div class="tab-pane container fade" id="applications">#}
+{#        Tab 2 mother fucker#}
+{#      </div>#}
+{##}
+{##}
+{#      <div class="tab-pane container fade" id="passwords">#}
+{#        Tab password#}
+{#      </div>#}
+{##}
+{##}
+{#      <div class="tab-pane container fade" id="receipts">#}
+{#        Tab receipts#}
+{#      </div>#}
+{##}
+{##}
+{#      <div class="tab-pane container fade" id="promo_code">#}
+{#        Tab promo code#}
+{#      </div>#}
+{#    </div>#}
 
   </div>
 </div>
@@ -204,6 +201,7 @@
 
         }
     });
+
 
     var webAuth = new auth0.WebAuth({
       domain: 'data-mailing.eu.auth0.com',
