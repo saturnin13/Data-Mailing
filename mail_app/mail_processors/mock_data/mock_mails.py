@@ -1,4 +1,5 @@
 from mail_app.mail import Mail
+from mail_app.mail_processors.processor_orchestrator import ProcessorOrchestrator
 from mail_app.mail_processors.ticket_processor import TicketProcessor
 
 
@@ -122,6 +123,5 @@ iceCurrency":"EUR","underName":{"@type":"Person","name":"Sixte de Maupeou d=
         self.mails.append(Mail("392f3d5c-f450-47c3-b74f-6b541e62be9a", "test3@test.com", "user3@gmail.com",
                                "Test subject 3", self.BODY_1, [], "1548515339"))
 mockmails = MockMails()
-ticket_processor = TicketProcessor()
-for mail in mockmails.mails:
-    ticket_processor.process(mail)
+processor_orchestrator = ProcessorOrchestrator()
+processor_orchestrator.process_all_mails(mockmails.mails)
