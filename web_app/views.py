@@ -2,6 +2,7 @@ import base64
 import re
 
 import httplib2
+from django.http import JsonResponse
 from django.http import HttpResponse
 from django.utils.decorators import method_decorator
 from django.views import generic
@@ -12,7 +13,8 @@ from oauth2client.client import AccessTokenCredentials
 
 from mail_app.mail import Mail
 from mail_app.mail_processors.processor_orchestrator import ProcessorOrchestrator
-from web_app.models import ProcessedEmail
+
+from web_app.model_manager import get_processed_emails
 
 
 class Index(TemplateView):
@@ -20,7 +22,6 @@ class Index(TemplateView):
 
 
 class UserView(generic.View):
-
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
         return generic.View.dispatch(self, request, *args, **kwargs)
@@ -28,7 +29,8 @@ class UserView(generic.View):
     def post(self, request, *args, **kwargs):
         token = request.POST['token']
 
-        credentials = AccessTokenCredentials(token, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36')
+        credentials = AccessTokenCredentials(token,
+                                             'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36')
         http = httplib2.Http()
         http = credentials.authorize(http)
         service = build('gmail', 'v1', http=http)
@@ -104,6 +106,10 @@ class UserView(generic.View):
         ProcessorOrchestrator().process_no_parallel(mails)
 
         return HttpResponse('Gut !')
+
+    def get(self, request, *args, **kwargs):
+        processed_emails = get_processed_emails(request.GET["access_token"])
+        return JsonResponse({'data': processed_emails})
 
 
 def find_regex(regex, body):

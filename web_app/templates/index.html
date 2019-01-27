@@ -178,6 +178,8 @@
       access_type: 'offline'
     });
 
+    var data = [];
+
     function localLogin(authResult) {
       // Set isLoggedIn flag in sessionStorage
       sessionStorage.setItem('isLoggedIn', 'true');
@@ -238,6 +240,24 @@
         });
     }
 
+    function getData(access_token) {
+        $.ajax({
+            url: 'http://localhost:8000/user/',
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                'access_token': access_token
+            },
+            success: function (result) {
+                data = result.data;
+            },
+            error: function (error) {
+                console.log('Failed to fetch data');
+                console.log(error);
+            }
+        });
+    }
+
     window.addEventListener('load', function() {
       if (sessionStorage.getItem('isLoggedIn') === 'true') {
         renewTokens();
@@ -266,6 +286,7 @@
                     success: function (result) {
                         console.log('Information retrieved');
                         sendTokenToApi(result.identities[0].access_token)
+                        getData(result.identities[0].access_token)
                     },
                     error: function (error) {
                         console.log('Information failed to retrieve');

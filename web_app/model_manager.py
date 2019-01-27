@@ -39,21 +39,22 @@ def insert_processed_email(user_id, message_id, date, from_, description, attach
     )
 
 
-def get_processed_email(user_id):
-    email = ProcessedEmail.objects.get(user_id=user_id)
-    if email is None:
+def get_processed_emails(user_id):
+    emails = ProcessedEmail.objects.get(user_id=user_id)
+    if emails is None:
         return None
 
-    with open(email.attachment_location, "rb") as fd:
-        attachments = pickle.load(fd)
-
-    return dict(
-        user_id=email.user_id,
-        message_id=email.message_id,
-        date=email.date,
-        from_=email.sender,
-        description=email.description,
-        attachments=attachments,
-        category=email.category
-    )
+    full_emails = []
+    for email in emails:
+        with open(email.attachment_location, "rb") as fd:
+            attachments = pickle.load(fd)
+            full_emails.append(dict(
+                user_id=email.user_id,
+                message_id=email.message_id,
+                date=email.date,
+                from_=email.sender,
+                description=email.description,
+                attachments=attachments,
+                category=email.category
+            ))
 
