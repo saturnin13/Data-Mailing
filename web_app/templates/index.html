@@ -45,14 +45,14 @@
     <!-- Nav tabs -->
     <ul class="nav nav-tabs mt-4">
       <li class="nav-item" v-for="category in categories">
-        <a class="nav-link" :class="category.name == 'Ticket' ? 'active' : ''" data-toggle="tab" href="#[[category.name]]">[[category.name]]&nbsp;<span class="badge badge-success float-right">[[category.mails.length]]</span></a>
+        <a class="nav-link" :class="category.name == 'Ticket' ? 'active' : ''" data-toggle="tab" href="#[[category.name.split(' ').join('_')]]">[[category.name]]&nbsp;<span class="badge badge-success float-right">[[category.mails.length]]</span></a>
       </li>
     </ul>
 
     <!-- Tab panes -->
     <div class="tab-content mt-1 pb-3">
 
-        <div class="tab-pane container" v-for="category in categories" :class="category.name == 'Ticket' ? 'active' : 'fade'" id="[[category.name]]">
+        <div class="tab-pane container" v-for="category in categories" :class="category.name == 'Ticket' ? 'active' : 'fade'" id="[[category.name.split(' ').join('_')]]">
           <div class="container">
 
             <div v-for="mail in category.mails">
@@ -68,12 +68,11 @@
                 <div id="collapse[[mail.message_id]][[category.name.split(' ').join('_')]]" class="collapse" :class="category.name == 'Ticket' ? 'show' : ''" aria-labelledby="headingOne">
                   <div class="card-body">
                     <div  v-for="attachment in mail.attachments">
-                      [[attachment.name]]
                       <div v-if="attachment.name.includes('.pdf')">
-                        <iframe src="http://docs.google.com/gview?embedded=true&url=http://localhost:8000/[[attachment.body]]" style="width:600px; height:500px;" frameborder="0"></iframe>
+                        <embed src="http://localhost:8000/[[attachment.body]]" width="600px" height="800px" />
                       </div>
                       <div v-else>
-                        <img src="http://localhost:8000/[[attachment.body]]" style="width:600px; height:500px;" frameborder="0"/>
+                        <img :src=="http://localhost:8000/[[attachment.body]]" style="width:600px; height:500px;" frameborder="0"/>
                       </div>
                     </div>
                       <span v-html="mail.description"></span>
