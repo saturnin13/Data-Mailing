@@ -1,4 +1,5 @@
 import base64
+from datetime import datetime
 
 from django.http import HttpResponse
 from django.utils.decorators import method_decorator
@@ -8,6 +9,10 @@ from django.views.generic import TemplateView
 import httplib2
 from googleapiclient.discovery import build
 from oauth2client.client import AccessTokenCredentials
+
+from mail_app.mail import Mail
+from mail_app.mail_postprocessor.postprocessor import PostProcessor
+from mail_app.mail_processors.processor_orchestrator import ProcessorOrchestrator
 
 
 class Index(TemplateView):
@@ -30,13 +35,37 @@ class UserView(generic.View):
 
         results = service.users().messages().list(userId='me').execute()
 
-        for m in results['messages'][:1]:
+        mails = []
+
+        for m in results['messages'][0:1]:
+            print(service.users().messages().get(userId='me', id=m['id']).execute()['payload'])
+
             message = service.users().messages().get(userId='me', id=m['id'], format='raw').execute()
-            print('Message snippet: %s' % message['snippet'])
 
-            msg_str = base64.urlsafe_b64decode(message['raw'].encode('ASCII'))
-            # mime_msg = email.message_from_string(msg_str)
+            msg_str = str(base64.urlsafe_b64decode(message['raw'].encode('UTF-8')))
 
-            print(str(msg_str))
+            time = datetime.fromtimestamp(int(message['internalDate']) / 1000)
+            user_id = token
+            from_ = find_regex("smtp.mailfrom=(.*?)\\\\r", msg_str).replace(';', '')
+            subject = find_regex("Subject: (.*?)\\\\r", msg_str)
+            body = msg_str
+            attachments = {}
 
-        return HttpResponse(token)
+            mails.append(
+                Mail(user_id, from_, subject, body, attachments, time)
+            )
+
+        # Process all mails and output them to
+        processed_mails = ProcessorOrchestrator().process_all_mails(mails)
+        PostProcessor().post_process_all(processed_mails)
+
+        return HttpResponse('Gut !')
+
+
+def find_regex(regex, body):
+    search_result = re.compile(regex, 0).search(body)
+
+    if not search_result:
+        return None
+
+    return search_result.groups()[0]
