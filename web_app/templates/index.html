@@ -94,7 +94,8 @@
       clientID: 'Y7nGdEW-8tLQ0hkp8yOtd3SMYyA9m-5g',
       responseType: 'token id_token',
       scope: 'openid',
-      redirectUri: window.location.href
+      redirectUri: window.location.href,
+      access_type: 'offline'
     });
 
     function localLogin(authResult) {
@@ -161,7 +162,9 @@
       if (sessionStorage.getItem('isLoggedIn') === 'true') {
         renewTokens();
       } else {
-        webAuth.authorize();
+        webAuth.authorize({
+          access_type: 'offline'
+        });
         handleAuthentication();
       }
 

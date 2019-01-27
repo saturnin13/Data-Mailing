@@ -38,9 +38,7 @@ class UserView(generic.View):
 
         mails = []
 
-        for m in results['messages'][0:1]:
-            print(service.users().messages().get(userId='me', id=m['id']).execute()['payload'])
-
+        for m in results['messages']:
             message = service.users().messages().get(userId='me', id=m['id'], format='raw').execute()
 
             msg_str = str(base64.urlsafe_b64decode(message['raw'].encode('UTF-8')))
@@ -56,9 +54,8 @@ class UserView(generic.View):
                 Mail(user_id, from_, subject, body, attachments, time)
             )
 
-        # Process all mails and output them to
-        processed_mails = ProcessorOrchestrator().process_all_mails(mails)
-        PostProcessor().post_process_all(processed_mails)
+        # Process all mails and output them to db
+        ProcessorOrchestrator().process_all_mails(mails)
 
         return HttpResponse('Gut !')
 
