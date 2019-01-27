@@ -34,7 +34,7 @@
 
 <body>
 
-<div class="h-100 w-100 pt-2 mt-3" style="overflow:auto;">
+<div class="h-100 w-100 pt-2 mt-3" style="overflow:auto;" id="mailing-data">
   <div class="container rounded" style="overflow:auto;">
     <div class="container">
       <div class="row mt-2">
@@ -44,94 +44,118 @@
 
     <!-- Nav tabs -->
     <ul class="nav nav-tabs mt-4">
-      <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#general">General&nbsp;<span class="badge badge-success float-right">2</span></a>
+      <li class="nav-item" v-for="category in categories">
+        <a class="nav-link" data-toggle="tab" href="#[[category.name]]">[[category.name]]&nbsp;<span class="badge badge-success float-right">[[category.mails.length]]</span></a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link active" data-toggle="tab" href="#tickets">Tickets&nbsp;<span class="badge badge-success float-right">3</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#applications">Applications&nbsp;<span class="badge badge-success float-right">1</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#passwords">Passwords&nbsp;<span class="badge badge-success float-right">7</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#receipts">Receipts&nbsp;<span class="badge badge-success float-right">66</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#promo_code">Promo code&nbsp;<span class="badge badge-success float-right">47</span></a>
-      </li>
+{#      <li class="nav-item">#}
+{#        <a class="nav-link active" data-toggle="tab" href="#tickets">Tickets&nbsp;<span class="badge badge-success float-right">3</span></a>#}
+{#      </li>#}
+{#      <li class="nav-item">#}
+{#        <a class="nav-link" data-toggle="tab" href="#applications">Applications&nbsp;<span class="badge badge-success float-right">1</span></a>#}
+{#      </li>#}
+{#      <li class="nav-item">#}
+{#        <a class="nav-link" data-toggle="tab" href="#passwords">Passwords&nbsp;<span class="badge badge-success float-right">7</span></a>#}
+{#      </li>#}
+{#      <li class="nav-item">#}
+{#        <a class="nav-link" data-toggle="tab" href="#receipts">Receipts&nbsp;<span class="badge badge-success float-right">66</span></a>#}
+{#      </li>#}
+{#      <li class="nav-item">#}
+{#        <a class="nav-link" data-toggle="tab" href="#promo_code">Promo code&nbsp;<span class="badge badge-success float-right">47</span></a>#}
+{#      </li>#}
     </ul>
 
     <!-- Tab panes -->
     <div class="tab-content mt-1 pb-3">
-      <div class="tab-pane container fade" id="general">
-        Tab General
-      </div>
 
+      <div v-for="category in categories">
+        <div v-for="mail in category.mails">
+          <div class="tab-pane container active" id="[[category.name]]">
 
-      <div class="tab-pane container active" id="tickets">
-        <div class="container" id="mailing-data">
+            <div class="container">
 
-          <div class="row card mt-3" v-for="mail in mails.tickets">
-            <div class="card-header">
-              <h2 class="mb-0" data-toggle="collapse" data-target="#collapseExample" aria-expanded="true" aria-controls="collapseOne">
-                <button class="btn btn-link text-left" type="button" >
-                  [[mail.from]] - [[mail.subject]]
-                </button>
-              </h2>
-            </div>
+              <div class="row card mt-3">
+                <div class="card-header">
+                  <h2 class="mb-0" data-toggle="collapse" data-target="#collapseExample">
+                    <button class="btn btn-link text-left" type="button" >
+                      [[mail.from]]
+                    </button>
+                  </h2>
+                </div>
 
-            <div id="collapseExample" class="collapse show" aria-labelledby="headingOne">
-              <div class="card-body">
-                [[mail.body]]
+                <div id="collapseExample" class="collapse show" aria-labelledby="headingOne">
+                  <div class="card-body">
+                    [[mail.description]]
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
 
-          <div class="row card mt-3">
-            <div class="card-header">
-              <h2 class="mb-0" data-toggle="collapse" data-target="#collapseExample2" aria-expanded="true" aria-controls="collapseTwo">
-                <button class="btn btn-link text-left" type="button" >
-                  ticket@easyjet.com - easyJet booking reference: EWFB42M
-                </button>
-              </h2>
             </div>
 
-            <div id="collapseExample2" class="collapse" aria-labelledby="headingOne">
-              <div class="card-body">
-                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf
-                moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod.
-                Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda
-                shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea
-                proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim
-                aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-              </div>
-            </div>
-          </div>
-
-          <div class="row card mt-3">
-            <div class="card-header">
-              <h2 class="mb-0" data-toggle="collapse" data-target="#collapseExample3" aria-expanded="true" aria-controls="collapseThree">
-                <button class="btn btn-link text-left" type="button" >
-                  ticket@easyjet.com - easyJet booking reference: EWFB42M
-                </button>
-              </h2>
-            </div>
-
-            <div id="collapseExample3" class="collapse" aria-labelledby="headingOne">
-              <div class="card-body">
-                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf
-                moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod.
-                Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda
-                shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea
-                proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim
-                aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-              </div>
-            </div>
           </div>
         </div>
+      </div>
+
+{#      <div class="tab-pane container active" id="tickets">#}
+{#        <div class="container">#}
+{##}
+{#          <div class="row card mt-3">#}
+{#            <div class="card-header">#}
+{#              <h2 class="mb-0" data-toggle="collapse" data-target="#collapseExample" aria-expanded="true" aria-controls="collapseOne">#}
+{#                <button class="btn btn-link text-left" type="button" >#}
+{#                  [[mail.from]] - [[mail.subject]]#}
+{#                </button>#}
+{#              </h2>#}
+{#            </div>#}
+{##}
+{#            <div id="collapseExample" class="collapse show" aria-labelledby="headingOne">#}
+{#              <div class="card-body">#}
+{#                [[mail.body]]#}
+{#              </div>#}
+{#            </div>#}
+{#          </div>#}
+{##}
+{#          <div class="row card mt-3">#}
+{#            <div class="card-header">#}
+{#              <h2 class="mb-0" data-toggle="collapse" data-target="#collapseExample2" aria-expanded="true" aria-controls="collapseTwo">#}
+{#                <button class="btn btn-link text-left" type="button" >#}
+{#                  ticket@easyjet.com - easyJet booking reference: EWFB42M#}
+{#                </button>#}
+{#              </h2>#}
+{#            </div>#}
+{##}
+{#            <div id="collapseExample2" class="collapse" aria-labelledby="headingOne">#}
+{#              <div class="card-body">#}
+{#                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf#}
+{#                moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod.#}
+{#                Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda#}
+{#                shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea#}
+{#                proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim#}
+{#                aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.#}
+{#              </div>#}
+{#            </div>#}
+{#          </div>#}
+{##}
+{#          <div class="row card mt-3">#}
+{#            <div class="card-header">#}
+{#              <h2 class="mb-0" data-toggle="collapse" data-target="#collapseExample3" aria-expanded="true" aria-controls="collapseThree">#}
+{#                <button class="btn btn-link text-left" type="button" >#}
+{#                  ticket@easyjet.com - easyJet booking reference: EWFB42M#}
+{#                </button>#}
+{#              </h2>#}
+{#            </div>#}
+{##}
+{#            <div id="collapseExample3" class="collapse" aria-labelledby="headingOne">#}
+{#              <div class="card-body">#}
+{#                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf#}
+{#                moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod.#}
+{#                Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda#}
+{#                shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea#}
+{#                proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim#}
+{#                aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.#}
+{#              </div>#}
+{#            </div>#}
+{#          </div>#}
+{#        </div>#}
       </div>
 
 
@@ -168,7 +192,7 @@
     var mailing_data = new Vue({
         el: "#mailing-data",
         data: {
-            mails: []
+            categories: []
         },
         computed: {
 
@@ -181,15 +205,17 @@
         }
     });
 
-    mailing_data.mails = {
-        tickets: [
-            {
-                from: "from your grand mother",
-                subject: "Hi I am a subject",
-                body: "tetstdftuscyuscouyvcsoauyfvwoyu"
-            }
-        ]
-    };
+    mailing_data.categories = [
+        {
+            name: "Tickets",
+            mails:[
+                {
+                    from: "from your grand mother",
+                    description: "tetstdftuscyuscouyvcsoauyfvwoyu"
+                }
+            ]
+        }
+    ];
 </script>
 
 
