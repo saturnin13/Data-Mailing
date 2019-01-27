@@ -30,8 +30,7 @@ class UserView(generic.View):
     def post(self, request, *args, **kwargs):
         token = request.POST['token']
 
-        credentials = AccessTokenCredentials(token,
-                                             'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36')
+        credentials = AccessTokenCredentials(token, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36')
         http = httplib2.Http()
         http = credentials.authorize(http)
         service = build('gmail', 'v1', http=http)
@@ -41,7 +40,7 @@ class UserView(generic.View):
         USER_ID = 'me'
         results = service.users().messages().list(userId=USER_ID).execute()
 
-        for i, m in enumerate(results['messages'][0:10]):
+        for i, m in enumerate(results['messages']):
             # message = service.users().messages().get(userId=USER_ID, id=m['id'], format='raw').execute()
 
             message_full = service \
@@ -106,11 +105,11 @@ class UserView(generic.View):
         # Process all mails and output them to db
         ProcessorOrchestrator().process_no_parallel(mails)
 
-        return HttpResponse('Gut !')
+        return HttpResponse('Gut !', status=200)
 
     def get(self, request, *args, **kwargs):
         processed_emails = get_processed_emails(request.GET["access_token"])
-        return JsonResponse(json.dumps({'data': processed_emails}))
+        return JsonResponse(json.dumps({'data': processed_emails}), safe=False)
 
 
 def find_regex(regex, body):
