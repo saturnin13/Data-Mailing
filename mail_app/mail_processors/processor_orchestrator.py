@@ -1,6 +1,7 @@
 from multiprocessing import Process
 
 from mail_app.mail import Mail
+from mail_app.mail_postprocessor.postprocessor import PostProcessor
 from mail_app.mail_processors.application_processor import ApplicationProcessor
 from mail_app.mail_processors.password_processor import PasswordProcessor
 from mail_app.mail_processors.promo_code_processor import PromoCodeProcessor
@@ -16,18 +17,18 @@ class ProcessorOrchestrator:
         self.promo_code_processor = PromoCodeProcessor()
         self.receipt_processor = ReceiptProcessor()
         self.ticket_processor = TicketProcessor()
+        self.postprocessor = PostProcessor()
+
+    def process_and_insert(self, processing_fn, mail: Mail):
+        self.postprocessor.post_process(processing_fn(mail))
+
 
     def process_all_mails(self, mails: [Mail]):
         for mail in mails:
-            funs = [self.application_processor.process,
-                    self.password_processor.process,
-                    self.promo_code_processor.process,
-                    self.receipt_processor.process,
-                    self.ticket_processor.process
-                    ]
-
-            processes = [Process(target=process_fn, args=(mail,)) for process_fn in funs]
-
+            funs = [self.application_processor.process, self.password_processor.process,
+                    self.promo_code_processor.process, self.receipt_processor.process, self.ticket_processor.process]
+            processes = [Process(target=self.process_and_insert, args=(process_fn, mail,)) for process_fn in funs]
             for process in processes:
                 process.start()
+            for process in processes:
                 process.join()
