@@ -1,5 +1,6 @@
 import base64
 import re
+import json
 
 import httplib2
 from django.http import JsonResponse
@@ -109,7 +110,7 @@ class UserView(generic.View):
 
     def get(self, request, *args, **kwargs):
         processed_emails = get_processed_emails(request.GET["access_token"])
-        return JsonResponse({'data': processed_emails})
+        return JsonResponse(json.dumps({'data': processed_emails}))
 
 
 def find_regex(regex, body):
