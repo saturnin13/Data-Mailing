@@ -98,8 +98,8 @@
     });
 
     function localLogin(authResult) {
-      // Set isLoggedIn flag in localStorage
-      localStorage.setItem('isLoggedIn', 'true');
+      // Set isLoggedIn flag in sessionStorage
+      sessionStorage.setItem('isLoggedIn', 'true');
       // Set the time that the access token will expire at
       expiresAt = JSON.stringify(
         authResult.expiresIn * 1000 + new Date().getTime()
@@ -107,8 +107,8 @@
       accessToken = authResult.accessToken;
       idToken = authResult.idToken;
 
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('idToken', idToken);
+      sessionStorage.setItem('accessToken', accessToken);
+      sessionStorage.setItem('idToken', idToken);
     }
 
     function handleAuthentication() {
@@ -158,7 +158,7 @@
     }
 
     window.addEventListener('load', function() {
-      if (localStorage.getItem('isLoggedIn') === 'true') {
+      if (sessionStorage.getItem('isLoggedIn') === 'true') {
         renewTokens();
       } else {
         webAuth.authorize();
@@ -170,7 +170,7 @@
             type: 'GET',
             dataType: 'json',
             headers: {
-                'authorization': 'Bearer ' + localStorage.getItem('accessToken')
+                'authorization': 'Bearer ' + sessionStorage.getItem('accessToken')
             },
             success: function (result) {
                $.ajax({
